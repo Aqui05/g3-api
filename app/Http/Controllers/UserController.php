@@ -1,0 +1,187 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordMail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use \Illuminate\Support\Facades\Facade;
+use App\Models\User;
+use DeepCopy\f001\B;
+use Faker\Core\Number;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
+
+
+class UserController extends Controller
+{
+    //
+
+    public function becomeSeller(Request $request)
+    {
+        $user=Auth::user();
+
+        if($user->role === 'seller')
+        {
+            return response()->json(['message'=>'Vous êtes déja un vendeur']);
+
+        }$validator =Validator::make(
+            $request->all(),[
+                'company'=>'required|string',
+                'phone_number'=>'required|string',
+                ]
+            );
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+
+        $user->update([
+            'role'=>'seller',
+            'phone_number'=>($request->phone_number),
+            'company'=>($request->company)
+            ]);
+        return response()->json(['message'=>'Vous êtes maintenant un vendeur']);
+    }
+
+    public function sendResetLinkEmail(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+    ]);
+
+    $email = $request->input('email');
+    $token = $this->generateToken($email);
+
+    // Envoi du courriel avec le lien de réinitialisation
+    Mail::to($email)->send(new ResetPasswordMail($token));
+
+    return response()->json(['message' => 'Reset email sent successfully']);
+}
+
+public function generateToken($email)
+{
+
+    // Vérifier si l'e-mail existe dans la base de données
+    $userExists = DB::table('users')
+        ->where('email', $email)
+        ->exists();
+
+    if (!$userExists) {
+        // Retourner une réponse, lever une exception, etc.
+        return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+    }
+
+    // Rechercher si un token existe déjà pour cet utilisateur
+    $existingToken = DB::table('password_reset_tokens')
+        ->where('email', $email)
+        ->first();
+
+    // Générer un nouveau token
+    $token = Str::random(60);
+
+    if ($existingToken) {
+        // Si un token existe déjà, le mettre à jour avec le nouveau token
+        DB::table('password_reset_tokens')
+            ->where('email', $email)
+            ->update([
+                'token' => $token,
+                'created_at' => now(), // Mettez à jour la date de création
+            ]);
+    } else {
+        // Si aucun token n'existe, insérez-en un nouveau
+        DB::table('password_reset_tokens')->insert([
+            'email' => $email,
+            'token' => $token,
+            'created_at' => now(),
+        ]);
+    }
+}
+
+
+public function resetPassword($token, Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|confirmed|min:8',
+    ]);
+
+    // Rechercher le token dans la base de données
+    $passwordReset = DB::table('password_reset_tokens')
+        ->where('token', $token)
+        ->first();
+
+    // Vérifier si le token existe
+    if (!$passwordReset) {
+        // Token invalide, rediriger ou renvoyer une réponse d'erreur
+        return response()->json(['message' => 'Token invalide'], 404);
+    }
+
+    // Vérifier si le token n'a pas expiré
+    if (Carbon::parse($passwordReset->created_at)->addMinutes(60)->isPast()) {
+        // Token expiré, rediriger ou renvoyer une réponse d'erreur
+        return response()->json(['message' => 'Token expiré'], 404);
+    }
+
+    // Vous pouvez maintenant réinitialiser le mot de passe pour l'utilisateur associé à ce token
+    $email = $request->input('email');
+    $password = bcrypt($request->input('password')); // Utilisez bcrypt pour hacher le mot de passe
+
+    // Réinitialiser le mot de passe
+    DB::table('users')
+        ->where('email', $email)
+        ->update(['password' => $password]);
+
+    // Effacer le token de la table après utilisation
+    DB::table('password_reset_tokens')->where('token', $token)->delete();
+
+    // Rediriger ou renvoyer une réponse de succès
+    return response()->json(['message' => 'Mot de passe réinitialisé avec succès']);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function modifyProfile(Request $request)
+    {
+        $user=Auth::user();
+
+        $validator =Validator::make(
+            $request->all(),[
+                'name'=>'required|string',
+                'email'=>'required|string|email|unique:users',
+                ]
+            );
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+
+        $user->update([
+            'email'=>($request->email),
+            'name'=>($request->name),
+            ]);
+        return response()->json(['user'=>$user]);
+    }
+
+}
