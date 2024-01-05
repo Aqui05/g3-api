@@ -19,3 +19,5 @@ yarn-error.log
 /.history
 /.vite
 /.git
+/.env
+/node_modules
