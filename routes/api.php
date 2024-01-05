@@ -141,8 +141,4 @@ Route::post('/payer', [PaymentController::class, 'payerPost'])/*->name('payement
 
 
 
-// login with github/google
-
-Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
-
-Route::get('/auth/{provider}/callback', [ProviderController::class , 'callback']);
+Route::get('/SeeNotification',[UserController::class, 'SeeNotification']);

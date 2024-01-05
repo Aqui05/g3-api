@@ -184,4 +184,42 @@ public function resetPassword($token, Request $request)
         return response()->json(['user'=>$user]);
     }
 
+
+
+
+
+    // See all notification
+
+public function seeNotification()
+{
+    // Get the authenticated user
+    $user = Auth::user();
+
+    // Check if a user is authenticated
+    if ($user) {
+        // Retrieve and display the title and content of each notification
+        $notifications = $user->notifications->map(function ($notification) {
+            return [
+                'title' => $notification->data['title'],
+                'content' => $notification->data['content'],
+            ];
+        });
+
+        dd($notifications);
+    } else {
+        // Handle the case where no user is authenticated
+        return response()->json(['message' => 'User not authenticated'], 401);
+    }
 }
+
+
+
+/*   public function NotificationNotRead()
+{
+    $user=User::first();
+    dd($user->unreadNotifications);
+}*/
+
+}
+
+

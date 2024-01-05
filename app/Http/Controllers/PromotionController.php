@@ -1,14 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
+//namespace App\Notification;
+
 
 use App\Http\Controllers\Controller;
 use App\Models\DiscountCode;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\AddPromo;
 
 class PromotionController extends Controller
 {
@@ -39,10 +43,19 @@ class PromotionController extends Controller
         'discount_percent' => $request->discount_percent,
         'start_date' => $request->start_date,
         'end_date' => $request->end_date,
-    ]);
+        'title' => $request->title,
+        ]);
+
 
     // Associer la promotion au produit
     $product->promotions()->save($promotion);
+
+
+    //Notifier les users d'un new promotion
+
+    $user = User::first();
+    $user->notify(new AddPromo($promotion));
+
 
     return response()->json(['message' => 'Promotion added successfully']);
 }

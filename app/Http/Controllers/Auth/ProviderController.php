@@ -8,13 +8,44 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 class ProviderController extends Controller
 {
     public function redirect($provider)
-    {
-        return Socialite::driver($provider)->redirect();
+{
+    return Socialite::driver($provider)->redirect();
+}
+
+
+/*    public function callback($provider)
+{
+    try {
+        $SocialUser = Socialite::driver($provider)->user();
+
+        $user = User::where('email', $SocialUser->email)->first();
+
+
+        if (!$user) {
+            // Create un new user si nécessaire
+            $user = new User();
+            $user->name = $SocialUser->name;
+            $user->email = $SocialUser->email;
+            $user->password = Hash::make($SocialUser->getName().'@'.$SocialUser->getId());
+            $user->save();
+        }
+
+        auth()->login($user);
+
+        // Message à l'utilisateur
+        return response()->json(['message' => 'Connexion réussie!']);
+
+
+    } catch (\Exception $e) {
+        dd($e->getMessage());
     }
+}*/
+
 
     public function callback($provider)
     {
@@ -49,10 +80,9 @@ class ProviderController extends Controller
             return redirect('/login');
         }
 
-
     }
 
-    public function callbacktwo()
+    /*public function callbacktwo()
     {
         try{
             $user = Socialite::driver('google')->user();
@@ -85,5 +115,5 @@ class ProviderController extends Controller
         {
             throw $th;
         }
-    }
+    }*/
 }

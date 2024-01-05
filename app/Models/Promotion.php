@@ -11,7 +11,7 @@ class Promotion extends Model
     use HasFactory;
     public $timestamps = false;
 
-    protected $fillable =['discount_percent','start_date','end_date','product_id'];
+    protected $fillable =['discount_percent','start_date','end_date','product_id','title'];
 
     public function product()
     {
