@@ -3,7 +3,7 @@
 
         <!-- Assuming your reset-password email template is in Blade syntax -->
     <p>Cliquer sur le bouton suivant pour changer votre mot de passe: </p>
-    <a href="{{ url('password/reset/'.$token) }}">Reset Password</a>
+    <a href="{{ url('#/password/reset/'.$token) }}">Reset Password</a>
 
     <p> Votre code de modification: {{ $resetCode }}</p>
 
