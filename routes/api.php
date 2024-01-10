@@ -36,6 +36,10 @@ Route::group(['middleware'=>'api','prefix'=>'auth'],
 function(){
     //add this to the end of all route who need verification (dashboard for example) ->middleware('verified')
     Route::post('/register',[AuthController::class,'register']);
+<<<<<<< HEAD
+=======
+    //Route::post('/register_Seller',[AuthController::class,'registerSeller']);
+>>>>>>> 9e3507a (modification commit)
     Route::post('/login',[AuthController::class,'login']);
     Route::get('/profile',[AuthController::class,'profile']);
     Route::post('/logout',[AuthController::class,'logout']);

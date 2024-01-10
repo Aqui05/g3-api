@@ -47,6 +47,36 @@ class AuthController extends Controller
             ],201);
     }
 
+<<<<<<< HEAD
+=======
+ /*   //fonction pour enregister un vendeur dans la BD
+    public function registerSeller(Request $request)
+    {
+        $validator =Validator::make(
+            $request->all(),[
+                'name'=>'required',
+                'email'=>'required|string|email|unique:users',
+                'password'=>'required|string|confirmed|min:6',
+                'company'=>'required|string',
+                'phone_number'=>'required|string',
+                ]
+            );
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+            $user = User::create(array_merge(
+                $validator->validated(),
+                ['password'=>bcrypt($request->password),
+                'role' => 'seller',
+                ]
+            ));
+            return response()->json([
+                'message'=>'user successfully registered',
+                'user'=>$user
+            ],201);
+    }*/
+
+>>>>>>> 9e3507a (modification commit)
 
     //Connexion
     public function login(Request $request)
