@@ -23,7 +23,7 @@ class AuthController extends Controller
     }
 
     //fonction pour enregister un acheteur dans la BD
-    public function registerBuyer(Request $request)
+    public function register(Request $request)
     {
         $validator =Validator::make(
             $request->all(),[
@@ -47,7 +47,7 @@ class AuthController extends Controller
             ],201);
     }
 
-    //fonction pour enregister un vendeur dans la BD
+ /*   //fonction pour enregister un vendeur dans la BD
     public function registerSeller(Request $request)
     {
         $validator =Validator::make(
@@ -72,7 +72,7 @@ class AuthController extends Controller
                 'message'=>'user successfully registered',
                 'user'=>$user
             ],201);
-    }
+    }*/
 
 
     //Connexion

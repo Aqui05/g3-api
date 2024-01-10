@@ -37,6 +37,7 @@ class UserController extends Controller
             $request->all(),[
                 'company'=>'required|string',
                 'phone_number'=>'required|string',
+                'numeroIDCard_Passport' => 'required|string',
                 ]
             );
             if($validator->fails()){
@@ -46,7 +47,12 @@ class UserController extends Controller
         $user->update([
             'role'=>'seller',
             'phone_number'=>($request->phone_number),
-            'company'=>($request->company)
+            'company'=>($request->company),
+            'numeroIDCard_Passport' => $request->numeroIDCard_Passport,
+            'imgIDCard_Passport' => $request->imgIDCard_Passport,
+            'Description_boutique' => $request->Description_boutique,
+            'Emplacement_boutique' => $request->Emplacement_boutique,
+            'photo_coverage' => $request->photo_coverage,
             ]);
         return response()->json(['message'=>'Vous êtes maintenant un vendeur']);
     }

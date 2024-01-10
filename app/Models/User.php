@@ -32,7 +32,12 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
         'provider',
         'provider_id',
         'provider_token',
-        'monthly_sales'
+        'monthly_sales',
+        'numeroIDCard_Passport',
+        'Description_boutique',
+        'imgIDCard_Passport',
+        'Emplacement_boutique',
+        'photo_coverage',
     ];
 
     /**
@@ -144,7 +149,7 @@ public function payments()
 
 public static function generateUsername($username)
 {
-    if($username === NULL)
+    if($username === null)
     {
         $username = Str::lower(Str::random(8));
     }
