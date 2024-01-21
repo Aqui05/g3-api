@@ -155,20 +155,6 @@ public function resetPassword($token, Request $request)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function modifyProfile(Request $request)
     {
         $user=Auth::user();
@@ -217,14 +203,6 @@ public function seeNotification()
         return response()->json(['message' => 'User not authenticated'], 401);
     }
 }
-
-
-
-/*   public function NotificationNotRead()
-{
-    $user=User::first();
-    dd($user->unreadNotifications);
-}*/
 
 }
 

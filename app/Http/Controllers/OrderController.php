@@ -162,44 +162,6 @@ $order->update(['total' => $total]);
     }
 
 
- /*   public function passerCommandePanier(Request $request,$cartId)
-    {
-    // Assurez-vous que l'utilisateur est authentifié
-    $user = auth()->user();
-
-
-    try {
-        // Recherchez le panier dans la base de données avec la classe pivot personnalisée
-        $cart = Cart::with('products')->findOrFail($cartId);
-
-        // Créez une nouvelle commande pour l'utilisateur
-        $order = new Order([
-            'user_id' => $user->id,
-            'status' => 'pending',
-        ]);
-        $order->save();
-
-        // Ajoutez les produits du panier à la commande avec les quantités spécifiées
-        foreach ($cart->products as $productInCart) {
-            $order->products()->attach($productInCart->id, ['quantity' => $productInCart->pivot->quantity]);
-
-            // Supprimez le produit du panier après l'avoir ajouté à la commande
-            Cart::where('cart_id', $cartId)->where('product_id', $productInCart->id)->delete();
-        }
-
-        // Supprimez le panier une fois la commande passée
-        $cart->delete();
-
-        // Vous pouvez retourner une réponse, rediriger l'utilisateur, etc.
-        return response()->json(['message' => 'Commande passée avec succès']);
-    }
-    catch (\Exception $e) {
-        // En cas d'erreur (par exemple, si la commande n'est pas trouvée), retournez une réponse d'erreur
-        return response()->json(['message' => 'Erreur lors de la commande', 'error' => $e->getMessage()], 500);
-    }
-}*/
-
-
 
     public function getOrderProducts($orderId)
     {

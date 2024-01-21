@@ -29,13 +29,6 @@ class PaymentController extends Controller
     }
 
 
-   /* public function payerPost()
-    {
-        $user = Auth::user();
-        $payement= $user->payments;
-    }*/
-
-
 public function callback(Request $request)
 {
     return response()->json(['Message']);
