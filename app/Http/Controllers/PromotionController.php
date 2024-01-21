@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-//namespace App\Notification;
 
 
 use App\Http\Controllers\Controller;
@@ -104,7 +103,7 @@ public function getProductsWithValidPromotion()
     // Récupérez les produits avec une promotion encore valide
     $products = Product::whereHas('promotions', function ($query) use ($today) {
         $query->where('start_date', '<=', $today)
-              ->where('end_date', '>=', $today);
+            ->where('end_date', '>=', $today);
     })->get();
 
     return response()->json(['products' => $products]);

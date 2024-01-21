@@ -47,33 +47,6 @@ class AuthController extends Controller
             ],201);
     }
 
- /*   //fonction pour enregister un vendeur dans la BD
-    public function registerSeller(Request $request)
-    {
-        $validator =Validator::make(
-            $request->all(),[
-                'name'=>'required',
-                'email'=>'required|string|email|unique:users',
-                'password'=>'required|string|confirmed|min:6',
-                'company'=>'required|string',
-                'phone_number'=>'required|string',
-                ]
-            );
-            if($validator->fails()){
-                return response()->json($validator->errors()->toJson(),400);
-            }
-            $user = User::create(array_merge(
-                $validator->validated(),
-                ['password'=>bcrypt($request->password),
-                'role' => 'seller',
-                ]
-            ));
-            return response()->json([
-                'message'=>'user successfully registered',
-                'user'=>$user
-            ],201);
-    }*/
-
 
     //Connexion
     public function login(Request $request)
@@ -107,14 +80,14 @@ class AuthController extends Controller
     }
 
     //Rafraichir et avoir un nouveau token
-     public function refresh()
+    public function refresh()
     {
         return $this->createNewToken(auth()->refresh());
     }
 
 
     //Utliser lors de la création du token
-     protected function createNewToken($token)
+    protected function createNewToken($token)
     {
         return response()->json([
             'access_token' => $token,
@@ -125,28 +98,5 @@ class AuthController extends Controller
     }
 
 
-
-
-  /*  public function redirect_github()
-    {
-        return Socialite::driver('github')->redirect();
-    }
-
-    public function callback_github()
-    {
-        $user = Socialite::driver('github')->user();
-        dd($user);
-    }
-
-    public function redirect_google()
-    {
-        return Socialite::driver('google')->redirect();
-    }
-
-    public function callback_google()
-    {
-        $user = Socialite::driver('google')->user();
-        dd($user);
-    } */
 
 }

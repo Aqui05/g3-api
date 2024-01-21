@@ -36,67 +36,127 @@ Route::group(['middleware'=>'api','prefix'=>'auth'],
 function(){
     //add this to the end of all route who need verification (dashboard for example) ->middleware('verified')
     Route::post('/register',[AuthController::class,'register']);
-    //Route::post('/register_Seller',[AuthController::class,'registerSeller']);
     Route::post('/login',[AuthController::class,'login']);
     Route::get('/profile',[AuthController::class,'profile']);
     Route::post('/logout',[AuthController::class,'logout']);
+
+    //rafraichir la page : Changer de token
     Route::post('/refresh', [AuthController::class,'refresh']);
+
+    //Changer son compte en un compte vendeur
     Route::post('/become_seller', [UserController::class,'becomeSeller']);
+
+    //Envoyer le lien par email pour Changer son password
     Route::post('/send_Reset_Link_Email', [UserController::class,'sendResetLinkEmail']);
+
+    //Changer son password
+    Route::post('resetpassword/{token}', [UserController::class,'resetPassword']);
+
+    //Modifier les information de son compte
     Route::post('/modify_profile',[UserController::class,'modifyProfile']);
 
-    Route::post('resetpassword/{token}', [UserController::class,'resetPassword'])/*->name('password.reset')*/;
 
 });
 
-Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
 
-Route::get('/auth/{provider}/callback', [ProviderController::class , 'callback']);
+/*
+*API PRODUCTS
+*/
 
-//API PRODUCTS
-
+//List de tous les produits relatif à un vendeur
 Route::get('/products',[ProductController::class,'getProducts']);
+
+//Détails d'un seul produit
 Route::get('/product/{id}',[ProductController::class,'getProductById']);
+
+//List de tous les produits dans la BD
 Route::get('/product_all',[ProductController::class,'getAllProducts']);
+
+//ajouter un produit
 Route::post('/addProduct',[ProductController::class,'addProduct']);
+
+//Mettre a jour un produit
 Route::post('/updateProduct/{id}',[ProductController::class,'updateProduct']);
+
+//Supprimer un produit
 Route::delete('/deleteProduct/{id}',[ProductController::class,'deleteProduct']);
+
+//Rechercher un produit
 Route::get('/searchProducts',[ProductController::class,'searchProduct']);
 
+//Obtenir la quantité du produit dans la BD
 Route::get('/products/{id}/quantite-disponible',[QuantityContoller::class, 'getQuantityDispo']);
 
 
-//FAVORITE PRODUCT
+/*
+*FAVORITE PRODUCT
+*/
+
+//Ajouter aux favoris
 Route::post('/favorites/toggle/{productId}', [FavoriteController::class, 'toggleFavorite']);
+
+//Voir la list de ses produits favoris
 Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 
 
-//filter de product:
+/*
+*filter de product:
+*/
 
+//filtrer par category
 Route::get('/products-filter/{categorie}', [CategoryContoller::class, 'filter_category']);
+
+//filtrer par sous category
 Route::get('/products-sous_filter/{subcategory}', [CategoryContoller::class, 'filter_subcategory']);
+
+//filtrer avec d'autres option
 Route::get('/products/filter', [CategoryContoller::class, 'filterProducts']);
 
 
 
-//API PANIER
+/*
+*API PANIER
+*/
 
+//Récupérer la liste des produits du panier
 Route::get('/cart', [CartController::class, 'index']);
+
+//Ajouter un produit a son panier
 Route::post('/cart/add/{productId}', [CartController::class, 'addItem']);
+
+//Mettre a jour un produit dans son panier: La quantité peut etre
 Route::post('/cart/update/{itemId}', [CartController::class, 'updateItem']);
+
+//Récupérer le prix du panier
 Route::get('/cart/total-price', [CartController::class, 'getTotalPrice']);
+
+//Enlever un produit de son panier
 Route::delete('/cart/remove_item_to_cart/{productId}', [CartController::class, 'removeItem']);
 
 
-//API ORDER
+/*
+*API ORDER
+*/
 
+//Commander un produit
 Route::post('/orders/create/{productId}', [OrderController::class, 'createOrder']);
+
+//Voir la liste de ses commandes
 Route::get('/orders', [OrderController::class, 'getUserOrders']);
+
+//Changer le statut d'une commande: Si la commande a été bien recu
 Route::post('/orders/{orderId}/update-status', [OrderController::class, 'updateOrderStatus']);
+
+//Commander les produits dans son panier
 Route::post('/orders/create-from-cart', [OrderController::class, 'createOrderFromCart']);
+
+//Un vendeur qui récupère les commandes relatif a ses produits
 Route::get('/orders/seller', [OrderController::class, 'getOrdersForSeller']);
+
+//Produits présents dans la commande
 Route::get('/orders/{orderId}/products', [OrderController::class, 'getOrderProducts']);
-Route::post('/passerCommandePanier/{cartId}', [OrderController::class, 'passerCommandePanier']);
+
+//Rendu a chaque vendeur sur ses ventes par mois
 Route::get('/orders/monthly', [OrderController::class, 'calculateMonthlySales']);
 
 
@@ -106,8 +166,14 @@ Route::get('/orders/monthly', [OrderController::class, 'calculateMonthlySales'])
 Route::post('/add_comment/{productId}',[CommentController::class, 'addComment']);
 Route::delete('/delete_comment/{commentId}',[CommentController::class, 'deleteComment']);
 Route::post('/update_comment/{commentId}',[CommentController::class, 'updateComment']);
+
+//Noter un produit
 Route::post('/rate_product/{productId}',[CommentController::class, 'rateProduct']);
+
+//Voir les commentaires
 Route::get('/view_comments/{productId}',[CommentController::class, 'viewComment']);
+
+//Répondre a un commentaire
 Route::post('/comments/{comment}/reply', [CommentController::class, 'addReply']);
 
 
@@ -121,24 +187,24 @@ Route::get('/products-with-valid-promotion', [PromotionController::class, 'getPr
 
 
 
-//PAYEMENT
+//PAYMENT static
 
-/*
-
-****Route::post('/paypal/create-payment', [PaymentController::class, 'createPayment'])->name('paypal.create');
-****Route::get('/paypal/success', [PaymentController::class, 'success'])->name('paypal.success');
-****Route::get('/paypal/cancel', [PaymentController::class, 'cancel'])->name('paypal.cancel');
-
-*/
+Route::post('/payer/{orderId}', [PaymentController::class, 'payer']);
 
 
 
-//MOMO API
-Route::get('/payer/{orderId}', [PaymentController::class, 'payer'])/*->name('payement')*/; //page de payement
-Route::post('/payer', [PaymentController::class, 'payerPost'])/*->name('payement')*/;
-
-
-
-
+//notifications
 
 Route::get('/SeeNotification',[UserController::class, 'SeeNotification']);
+
+
+
+
+
+/*
+*Connexion avec un service tiers: Le nom du service sera remplacer par $provider.(google/github)
+*/
+
+Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
+
+Route::get('/auth/{provider}/callback', [ProviderController::class , 'callback']);

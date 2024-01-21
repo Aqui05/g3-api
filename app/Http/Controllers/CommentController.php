@@ -83,16 +83,11 @@ class CommentController extends Controller
 
     public function viewComment($productId)
     {
-
-        //$product = Product::find($productId);
-
-        //$comments = $product->comments;
-
         $comments = Comment::where('product_id', $productId)->get();
 
         foreach ($comments as $comment) {
-    echo "Comment: {$comment->content} by {$comment->user->name}";
-}
+            echo "Comment: {$comment->content} by {$comment->user->name}";
+        }
     }
 
     public function addReply(Request $request, Comment $comment)
@@ -140,22 +135,6 @@ class CommentController extends Controller
     $product->update(['rating' => $product->averageRating()]);
 
     return response()->json(['message' => 'Note enregistrée avec succès']);
-}
-
-private function note_product()
-{
-        $averageRatings = Rating::selectRaw('product_id, AVG(rating) as average_rating')
-        ->groupBy('product_id')
-        ->get();
-
-    foreach ($averageRatings as $averageRating) {
-        $productId = $averageRating->product_id;
-        $average = $averageRating->rating;
-
-        // Mettez à jour la table des produits avec la moyenne des notations
-        $product = Product::find($productId);
-        $product->update(['rating' => $average]);
-    }
 }
 
 
