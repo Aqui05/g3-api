@@ -55,6 +55,11 @@ class ProductController extends Controller
 
     public function getProducts()
     {
+        // Vérifiez que l'utilisateur est un vendeur
+        if (Auth::user()->role !== 'seller') {
+            return response()->json(['message' => 'Vous n\'êtes pas vendeur.'], 403);
+        }
+
         //utilisateur actuel
         $seller = Auth::user();
         // Récupérez la liste des produits associés à cet utilisateur

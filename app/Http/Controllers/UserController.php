@@ -65,11 +65,51 @@ class UserController extends Controller
 
     $email = $request->input('email');
     $token = $this->generateToken($email);
+    $resetCode = $this->generateCode($email);
 
     // Envoi du courriel avec le lien de réinitialisation
-    Mail::to($email)->send(new ResetPasswordMail($token));
+    Mail::to($email)->send(new ResetPasswordMail($token,$resetCode));
 
     return response()->json(['message' => 'Reset email sent successfully']);
+}
+
+public function generateCode($email)
+{
+
+    // Vérifier si l'e-mail existe dans la base de données
+    $userExists = DB::table('users')
+        ->where('email', $email)
+        ->exists();
+
+    if (!$userExists) {
+        // Retourner une réponse, lever une exception, etc.
+        return response()->json(['message' => 'Utilisateur non trouvé'], 404);
+    }
+
+    // Rechercher si un token existe déjà pour cet utilisateur
+    $existingCode = DB::table('password_reset_tokens')
+        ->where('email', $email)
+        ->first();
+
+    // Générer un code de réinitialisation à 5 chiffres
+    $resetCode = mt_rand(10000, 99999);
+
+    if ($existingCode) {
+        // Si un token existe déjà, le mettre à jour avec le nouveau token et le code
+        DB::table('password_reset_tokens')
+            ->where('email', $email)
+            ->update([
+                'reset_code' => $resetCode,
+                'created_at' => now(),
+            ]);
+    } else {
+        // Si aucun token n'existe, insérez-en un nouveau avec le code
+        DB::table('password_reset_tokens')->insert([
+            'email' => $email,
+            'reset_code' => $resetCode,
+            'created_at' => now(),
+        ]);
+    }
 }
 
 public function generateToken($email)
@@ -94,15 +134,15 @@ public function generateToken($email)
     $token = Str::random(60);
 
     if ($existingToken) {
-        // Si un token existe déjà, le mettre à jour avec le nouveau token
+        // Si un token existe déjà, le mettre à jour avec le nouveau token et le code
         DB::table('password_reset_tokens')
             ->where('email', $email)
             ->update([
                 'token' => $token,
-                'created_at' => now(), // Mettez à jour la date de création
+                'created_at' => now(),
             ]);
     } else {
-        // Si aucun token n'existe, insérez-en un nouveau
+        // Si aucun token n'existe, insérez-en un nouveau avec le code
         DB::table('password_reset_tokens')->insert([
             'email' => $email,
             'token' => $token,
@@ -117,6 +157,7 @@ public function resetPassword($token, Request $request)
     $request->validate([
         'email' => 'required|email',
         'password' => 'required|confirmed|min:8',
+        'reset_code' => 'required|digits:5',  // New validation rule for 5-digit code
     ]);
 
     // Rechercher le token dans la base de données
@@ -128,6 +169,11 @@ public function resetPassword($token, Request $request)
     if (!$passwordReset) {
         // Token invalide, rediriger ou renvoyer une réponse d'erreur
         return response()->json(['message' => 'Token invalide'], 404);
+    }
+
+    if ($passwordReset->reset_code != $request->input('reset_code')) {
+        // Code invalide, rediriger ou renvoyer une réponse d'erreur
+        return response()->json(['message' => 'Code de réinitialisation invalide'], 400);
     }
 
     // Vérifier si le token n'a pas expiré

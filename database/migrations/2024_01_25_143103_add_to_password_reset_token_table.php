@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-<<<<<<< HEAD
         Schema::table('password_reset_tokens', function (Blueprint $table) {
-=======
-        Schema::table('password_reset_token', function (Blueprint $table) {
->>>>>>> e5d35cc (Y commit)
-            //
+            $table->string('resetCode')->nullable();
         });
     }
 
@@ -25,12 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-<<<<<<< HEAD
         Schema::table('password_reset_tokens', function (Blueprint $table) {
-=======
-        Schema::table('password_reset_token', function (Blueprint $table) {
->>>>>>> e5d35cc (Y commit)
-            //
+            $table->dropColumn('resetCode');
         });
     }
 };
