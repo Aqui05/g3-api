@@ -23,7 +23,6 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    //
 
     public function becomeSeller(Request $request)
     {
@@ -201,8 +200,8 @@ public function resetPassword($token, Request $request)
 
         $validator =Validator::make(
             $request->all(),[
-                'name'=>'required|string',
-                'email'=>'required|string|email|unique:users',
+                'name'=>'string',
+                'email'=>'string|email|unique:users',
                 ]
             );
             if($validator->fails()){
