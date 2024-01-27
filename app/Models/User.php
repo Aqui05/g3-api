@@ -12,8 +12,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Product;
 use App\Models\Rating;
 use App\Models\Categorie;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+class User extends Authenticatable implements JWTSubject,MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
