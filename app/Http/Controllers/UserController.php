@@ -35,8 +35,8 @@ class UserController extends Controller
 
         }$validator =Validator::make(
             $request->all(),[
-                'company'=>'required|string',
-                'phone_number'=>'required|string',
+                'company'=>'string',
+                'phone_number'=>'string',
                 'numeroIDCard_Passport' => 'required|string',
                 ]
             );
@@ -44,7 +44,7 @@ class UserController extends Controller
                 return response()->json($validator->errors()->toJson(),400);
             }
 
-        $user->update([
+        /*$user->update([
             'role'=>'seller',
             'phone_number'=>($request->phone_number),
             'company'=>($request->company),
@@ -53,7 +53,7 @@ class UserController extends Controller
             'Description_boutique' => $request->Description_boutique,
             'Emplacement_boutique' => $request->Emplacement_boutique,
             'photo_coverage' => $request->photo_coverage,
-            ]);
+            ]);*/
         return response()->json(['message'=>'Vous êtes maintenant un vendeur']);
     }
 

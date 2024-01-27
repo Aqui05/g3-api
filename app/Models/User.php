@@ -13,7 +13,7 @@ use App\Models\Product;
 use App\Models\Rating;
 use App\Models\Categorie;
 
-class User extends Authenticatable implements JWTSubject,MustVerifyEmail
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
