@@ -198,7 +198,7 @@ public function resetPassword($token, Request $request)
     {
         $user=Auth::user();
 
-        /*$validator =Validator::make(
+        $validator =Validator::make(
             $request->all(),[
                 'name'=>'string',
                 'email'=>'string|email|unique:users',
@@ -211,7 +211,7 @@ public function resetPassword($token, Request $request)
         $user->update([
             'email'=>($request->email),
             'name'=>($request->name),
-            ]);*/
+            ]);
         return response()->json(['user'=>$user]);
     }
 
