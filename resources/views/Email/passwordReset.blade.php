@@ -1,11 +1,13 @@
 <x-mail::message>
     # Change password request
 
-        <!-- Assuming your reset-password email template is in Blade syntax -->
-    <p>Cliquer sur le bouton suivant pour changer votre mot de passe: </p>
-    <a href="{{ url('password/reset/'.$token) }}">Reset Password</a>
+    Cliquer sur le bouton suivant pour changer votre mot de passe:
 
-    <p> Votre code de modification: {{ $resetCode }}</p>
+    <x-mail::button :url="'password/reset/'.$token">
+        Changer de mot de passe
+    </x-mail::button>
+
+    Votre code de modification: " {{$resetCode}} "
 
     Si vous n'avez pas initié cette demande, veuillez ignorer ce mail.
 

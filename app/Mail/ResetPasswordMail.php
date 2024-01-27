@@ -22,6 +22,13 @@ class ResetPasswordMail extends Mailable
         $this->resetCode = $resetCode;
     }
 
+        public function build()
+    {
+        return $this->subject('Modification de mot de passe')
+        ->markdown('Email.passwordReset')
+        ->with(['token' => $this->token, 'resetCode' => $this->resetCode,]);
+    }
+
     /**
      * Get the message envelope.
      */
@@ -42,11 +49,6 @@ class ResetPasswordMail extends Mailable
         );
     }
 
-    public function build()
-    {
-        return $this->view('Email.passwordReset')
-                    ->with(['token' => $this->token, 'resetCode' => $this->resetCode]);
-    }
 
     /**
      * Get the attachments for the message.

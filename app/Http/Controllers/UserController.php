@@ -99,14 +99,14 @@ public function generateCode($email)
         DB::table('password_reset_tokens')
             ->where('email', $email)
             ->update([
-                'reset_code' => $resetCode,
+                'resetCode' => $resetCode,
                 'created_at' => now(),
             ]);
     } else {
         // Si aucun token n'existe, insérez-en un nouveau avec le code
         DB::table('password_reset_tokens')->insert([
             'email' => $email,
-            'reset_code' => $resetCode,
+            'resetCode' => $resetCode,
             'created_at' => now(),
         ]);
     }
@@ -157,36 +157,29 @@ public function resetPassword($token, Request $request)
     $request->validate([
         'email' => 'required|email',
         'password' => 'required|confirmed|min:8',
-        'reset_code' => 'required|digits:5',  // New validation rule for 5-digit code
+        'resetCode' => 'required|digits:5',  // New validation rule for 5-digit code
     ]);
 
-    // Rechercher le token dans la base de données
     $passwordReset = DB::table('password_reset_tokens')
         ->where('token', $token)
         ->first();
 
-    // Vérifier si le token existe
     if (!$passwordReset) {
-        // Token invalide, rediriger ou renvoyer une réponse d'erreur
         return response()->json(['message' => 'Token invalide'], 404);
     }
 
-    if ($passwordReset->reset_code != $request->input('reset_code')) {
-        // Code invalide, rediriger ou renvoyer une réponse d'erreur
+    if ($passwordReset->resetCode != $request->input('resetCode')) {
         return response()->json(['message' => 'Code de réinitialisation invalide'], 400);
     }
 
-    // Vérifier si le token n'a pas expiré
     if (Carbon::parse($passwordReset->created_at)->addMinutes(60)->isPast()) {
-        // Token expiré, rediriger ou renvoyer une réponse d'erreur
+
         return response()->json(['message' => 'Token expiré'], 404);
     }
 
-    // Vous pouvez maintenant réinitialiser le mot de passe pour l'utilisateur associé à ce token
     $email = $request->input('email');
     $password = bcrypt($request->input('password')); // Utilisez bcrypt pour hacher le mot de passe
 
-    // Réinitialiser le mot de passe
     DB::table('users')
         ->where('email', $email)
         ->update(['password' => $password]);

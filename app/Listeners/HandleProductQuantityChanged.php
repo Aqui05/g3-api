@@ -33,7 +33,7 @@ public function handle(ProductQuantityChanged $event)
             // Envoyer un e-mail au vendeur
             $productName = $product->name;
 
-        Mail::to($sellerEmail)->send(new LowStockNotificationMail($productName));}
+        Mail::to($sellerEmail)->send(new ficationMail($productName));}
     }
 }
 }
