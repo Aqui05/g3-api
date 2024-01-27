@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $user=Auth::user();
 
-        /*if($user->role === 'seller')
+        if($user->role === 'seller')
         {
             return response()->json(['message'=>'Vous êtes déja un vendeur']);
         }
@@ -54,7 +54,7 @@ class UserController extends Controller
             'Description_boutique' => $request->Description_boutique,
             'Emplacement_boutique' => $request->Emplacement_boutique,
             'photo_coverage' => $request->photo_coverage,
-            ]);*/
+            ]);
         return response()->json(['message'=>'Vous êtes maintenant un vendeur']);
     }
 
