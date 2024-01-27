@@ -29,11 +29,12 @@ class UserController extends Controller
     {
         $user=Auth::user();
 
-        if($user->role === 'seller')
+        /*if($user->role === 'seller')
         {
             return response()->json(['message'=>'Vous êtes déja un vendeur']);
+        }
 
-        }$validator =Validator::make(
+        $validator =Validator::make(
             $request->all(),[
                 'company'=>'string',
                 'phone_number'=>'string',
@@ -44,7 +45,7 @@ class UserController extends Controller
                 return response()->json($validator->errors()->toJson(),400);
             }
 
-        /*$user->update([
+        $user->update([
             'role'=>'seller',
             'phone_number'=>($request->phone_number),
             'company'=>($request->company),
