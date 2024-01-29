@@ -14,6 +14,61 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+
+    public function addCategory(Request $request)
+    {
+        // Vérifiez que l'utilisateur est un admin
+        if (Auth::user()->role !== 'admin') {
+            return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des produits.'], 403);
+        }
+
+        $request->validate([
+            'name' => 'required|string',
+            'description' => 'string',
+            'type' => 'string',
+            ]);
+
+
+        $categorie = new Categorie([
+            'name' => $request->name,
+            'description' => $request->description,
+            'type' => $request->type,
+        ]);
+
+        $categorie->save();
+
+        return response()->json(['message' => 'Categorie ajouté avec succès','categorie'=>$categorie]);
+
+    }
+
+    public function addSubcategory(Request $request)
+    {
+        // Vérifiez que l'utilisateur est un admin
+        if (Auth::user()->role !== 'admin') {
+            return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des sous categories.'], 403);
+        }
+
+        // Validate les data du formulaire si nécessaire
+        $request->validate([
+            'name' => 'required|string',
+            'categorie_id' => 'required|exists:categories,id',
+        ]);
+
+
+        // Ajoutez le produit associé à l'utilisateur actuel
+        $subcategory = new Subcategory([
+            'name' => $request->name,
+        ]);
+        $category = Categorie::find($request->input('categorie_id'));
+
+        $subcategory->categorie()->associate($category);
+
+        $subcategory->save();
+
+        return response()->json(['message' => 'Sous catégorie ajouté avec succès','subcategory'=>$subcategory]);
+
+    }
+
     //
     public function addProduct(Request $request)
     {

@@ -24,6 +24,30 @@ use Illuminate\Support\Str;
 class UserController extends Controller
 {
 
+        public function registerAdmin(Request $request)
+    {
+        $validator =Validator::make(
+            $request->all(),[
+                'name'=>'required',
+                'email'=>'required|string|email|unique:users',
+                'password'=>'required|string|confirmed|min:6',
+            ]
+            );
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+            $user = User::create(array_merge(
+                $validator->validated(),
+                ['password'=>bcrypt($request->password),
+                'role' => 'admin',
+                ]
+            ));
+            return response()->json([
+                'message'=>'admin successfully registered',
+                'user'=>$user
+            ],201);
+    }
+
     public function becomeSeller(Request $request)
     {
         $user=Auth::user();

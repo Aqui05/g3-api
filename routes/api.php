@@ -58,6 +58,11 @@ function(){
 
 });
 
+    Route::post('/register_admin',[UserController::class,'registerAdmin']);
+
+Route::post('/addCategory',[ProductController::class,'addCategory']);
+Route::post('/addSubcategory',[ProductController::class,'addSubcategory']);
+
 
 /*
 *API PRODUCTS
