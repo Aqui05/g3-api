@@ -75,6 +75,7 @@ class ProductController extends Controller
             'quantity' =>'required',
             'categorie_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
+            'photo_path' => 'nullable|string|max:2048',
         ]);
 
 
@@ -84,6 +85,7 @@ class ProductController extends Controller
             'description' => $request->description,
             'prix' => $request->prix,
             'quantity'=> $request->quantity,
+            'photo_path' => $request->photo_path,
             'user_id' => Auth::id(),
         ]);
         $category = Categorie::find($request->input('categorie_id'));
