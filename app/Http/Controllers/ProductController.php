@@ -17,10 +17,6 @@ class ProductController extends Controller
 
     public function addCategory(Request $request)
     {
-        // Vérifiez que l'utilisateur est un admin
-        if (Auth::user()->role !== 'admin') {
-            return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des produits.'], 403);
-        }
 
         $request->validate([
             'name' => 'required|string',
@@ -43,15 +39,9 @@ class ProductController extends Controller
 
     public function addSubcategory(Request $request)
     {
-        // Vérifiez que l'utilisateur est un admin
-        if (Auth::user()->role !== 'admin') {
-            return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des sous categories.'], 403);
-        }
-
-        // Validate les data du formulaire si nécessaire
         $request->validate([
             'name' => 'required|string',
-            'categorie_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
 
@@ -59,7 +49,7 @@ class ProductController extends Controller
         $subcategory = new Subcategory([
             'name' => $request->name,
         ]);
-        $category = Categorie::find($request->input('categorie_id'));
+        $category = Categorie::find($request->input('category_id'));
 
         $subcategory->categorie()->associate($category);
 
@@ -94,7 +84,6 @@ class ProductController extends Controller
             'description' => $request->description,
             'prix' => $request->prix,
             'quantity'=> $request->quantity,
-            //'categorie_id' => $request->categorie_id,
             'user_id' => Auth::id(),
         ]);
         $category = Categorie::find($request->input('categorie_id'));
