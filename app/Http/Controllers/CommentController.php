@@ -116,7 +116,7 @@ class CommentController extends Controller
             'rating' => 'required|numeric|min:0|max:5',
         ]);
 
-    // Vérifiez si l'utilisateur a déjà noté ce produit
+        if ($user) {    // Vérifiez si l'utilisateur a déjà noté ce produit
     $existingRating = $user->ratingForProduct(Product::find($productId));
 
     if ($existingRating) {
@@ -133,8 +133,10 @@ class CommentController extends Controller
     $product = Product::find($productId);
 
     $product->update(['rating' => $product->averageRating()]);
+}
 
-    return response()->json(['message' => 'Note enregistrée avec succès']);
+return response()->json(['message' => 'Note enregistrée avec succès']);
+
 }
 
 
