@@ -112,7 +112,7 @@ Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 Route::get('/products-filter/{categorie}', [CategoryContoller::class, 'filter_category']);
 
 //filtrer par sous category
-Route::get('/products-sous_filter/{subcategory}', [CategoryContoller::class, 'filter_subcategory']);
+Route::get('/products-sous_filter', [CategoryContoller::class, 'filter_subcategory']);
 
 //filtrer avec d'autres option
 Route::get('/products/filter', [CategoryContoller::class, 'filterProducts']);
