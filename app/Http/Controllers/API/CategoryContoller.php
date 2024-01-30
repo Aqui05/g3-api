@@ -19,17 +19,12 @@ class CategoryContoller extends Controller
         return response()->json(['produits' => $products]);
     }
 
-public function filter_subcategory(Request $request)
-{
-    $subcategory = $request->input('subcategory');
-
-    // Continue with your logic to filter by subcategory
-    $subCategoryId = subcategory::where('name', $subcategory)->firstOrFail()->id;
-    $products = Product::where('categorie_id', $subCategoryId)->get();
-
-    return response()->json(['produits' => $products]);
-}
-
+    public function filter_subcategory($subcategory)
+    {
+        $subCategoryId = subcategory::where('name', $subcategory)->firstOrFail()->id;
+        $products = Product::where('categorie_id', $subCategoryId)->get();
+        return response()->json(['produits' => $products]);
+    }
 
 
     public function filterProducts(Request $request)
