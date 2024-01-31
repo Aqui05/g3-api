@@ -17,7 +17,17 @@ class Product extends Model
 
     public $timestamps = false;
 
-    protected $fillable =['name','description','prix','user_id','quantity','categorie_id', 'rating','subcategory_id'];
+    protected $fillable =[
+        'name',
+        'description',
+        'prix',
+        'user_id',
+        'quantity',
+        'categorie_id',
+        'rating',
+        'subcategory_id',
+        'photo_path'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
