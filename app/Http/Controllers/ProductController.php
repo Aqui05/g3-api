@@ -75,7 +75,7 @@ class ProductController extends Controller
             'quantity' =>'required',
             'categorie_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
-            'photo_path' => 'string'
+            'photo_path' => 'string|url'
         ]);
 
 
