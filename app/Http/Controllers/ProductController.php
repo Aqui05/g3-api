@@ -75,7 +75,7 @@ class ProductController extends Controller
             'quantity' =>'required',
             'categorie_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
-            'photo_path' => 'string|max:2048',
+            'photo_path' => 'string|max:2048|image|url'
         ]);
 
 
@@ -147,7 +147,7 @@ class ProductController extends Controller
             'description' => 'string',
             'quantity' =>'required',
             'subcategory_id' => 'required|exists:subcategories,id',
-            'photo_path' => 'string|max:2048',
+            'photo_path' => 'string|max:2048|image|url'
         ]);
 
         // Mettez à jour les données du produit
