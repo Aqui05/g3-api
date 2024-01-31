@@ -75,7 +75,7 @@ class ProductController extends Controller
             'quantity' =>'required',
             'categorie_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
-            'photo_path' => 'nullable|string|max:2048',
+            'photo_path' => 'string|max:2048',
         ]);
 
 
@@ -142,10 +142,12 @@ class ProductController extends Controller
         // Validez les données de la requête
         $request->validate([
             'name' => 'required|string',
-            'description' => 'nullable|string',
             'prix' => 'required|numeric',
-            'quantity' => 'required|integer',
             'categorie_id' => 'required|exists:categories,id',
+            'description' => 'string',
+            'quantity' =>'required',
+            'subcategory_id' => 'required|exists:subcategories,id',
+            'photo_path' => 'string|max:2048',
         ]);
 
         // Mettez à jour les données du produit
@@ -154,7 +156,9 @@ class ProductController extends Controller
             'description' => $request->description,
             'prix' => $request->prix,
             'quantity' => $request->quantity,
+            'photo_path' => $request->photo_path,
             'categorie_id' => $request->categorie_id,
+            'subcategory_id' => $request->subcategory_id,
         ]);
 
         return response()->json(['produit' => $product], 200);
