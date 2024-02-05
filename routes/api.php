@@ -100,6 +100,9 @@ Route::get('/products/{id}/quantite-disponible',[QuantityContoller::class, 'getQ
 //Ajouter aux favoris
 Route::post('/favorites/toggle/{productId}', [FavoriteController::class, 'toggleFavorite']);
 
+//Retirer des favoris
+Route::post('/favorites/remove/{productId}', [FavoriteController::class, 'removeFavorite']);
+
 //Voir la list de ses produits favoris
 Route::get('/favorites', [FavoriteController::class, 'getFavorites']);
 
