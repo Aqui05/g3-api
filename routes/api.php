@@ -62,6 +62,8 @@ function(){
 
 Route::post('/addCategory',[ProductController::class,'addCategory']);
 Route::post('/addSubcategory',[ProductController::class,'addSubcategory']);
+Route::get('/Category',[ProductController::class,'Category']);
+Route::get('/Subcategory',[ProductController::class,'Subcategory']);
 
 
 /*

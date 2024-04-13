@@ -15,9 +15,23 @@ use Illuminate\Support\Facades\Auth;
 class ProductController extends Controller
 {
 
+
+        public function Category()
+    {
+        return response()->json([Categorie::all(),200]);
+    }
+
+public function Subcategory()
+{
+    $subcategories = Subcategory::all();
+    return response()->json($subcategories, 200);
+}
+
+
+
+
     public function addCategory(Request $request)
     {
-
         $request->validate([
             'name' => 'required|string',
             'description' => 'string',
@@ -60,44 +74,47 @@ class ProductController extends Controller
     }
 
     //
-    public function addProduct(Request $request)
-    {
-        // Vérifiez que l'utilisateur est un vendeur
-        if (Auth::user()->role !== 'seller') {
-            return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des produits.'], 403);
-        }
-
-        // Validate les data du formulaire si nécessaire
-        $request->validate([
-            'name' => 'required|string',
-            'description' => 'required|string',
-            'prix' => 'required|numeric',
-            'quantity' =>'required',
-            'categorie_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            //'photo_path' => 'string|image|url'
-        ]);
-
-
-        // Ajoutez le produit associé à l'utilisateur actuel
-        $product = new Product([
-            'name' => $request->name,
-            'description' => $request->description,
-            'prix' => $request->prix,
-            'quantity'=> $request->quantity,
-            'photo_path' => $request->photo_path,
-            'user_id' => Auth::id(),
-        ]);
-        $category = Categorie::find($request->input('categorie_id'));
-        $subcategory = subcategory::find($request->input('subcategory_id'));
-
-        $product->categorie()->associate($category);
-        $product->subcategory()->associate($subcategory);
-
-        $product->save();
-
-        return response()->json(['message' => 'Produit ajouté avec succès','Produit'=>$product]);
+public function addProduct(Request $request)
+{
+    // Vérifiez que l'utilisateur est un vendeur
+    if (Auth::user()->role !== 'seller') {
+        return response()->json(['message' => 'Vous n\'avez pas la permission d\'ajouter des produits.'], 403);
     }
+
+    // Validez les données du formulaire si nécessaire
+    $request->validate([
+        'name' => 'required|string',
+        'description' => 'required|string',
+        'prix' => 'required|numeric',
+        'quantity' => 'required',
+        'categorie_id' => 'required|exists:categories,id',
+        'subcategory_id' => 'required|exists:subcategories,id',
+    ]);
+
+    // Téléchargez l'image sur le serveur
+    $photoPath = $request->file('photo_path')->store('product_images', 'public');
+
+    // Ajoutez le produit associé à l'utilisateur actuel
+    $product = new Product([
+        'name' => $request->name,
+        'description' => $request->description,
+        'prix' => $request->prix,
+        'quantity' => $request->quantity,
+        'photo_path' => $photoPath,
+        'user_id' => Auth::id(),
+    ]);
+
+    $category = Categorie::find($request->input('categorie_id'));
+    $subcategory = Subcategory::find($request->input('subcategory_id'));
+
+    $product->categorie()->associate($category);
+    $product->subcategory()->associate($subcategory);
+
+    $product->save();
+
+    return response()->json(['message' => 'Produit ajouté avec succès', 'Produit' => $product]);
+}
+
 
     public function getProducts()
     {
